@@ -159,7 +159,7 @@
 							'post_content'          => $srcforum->forum_desc,
 							'post_title'            => $this->convertTitle($srcforum->forum_name),
 							'post_excerpt'          => '',
-							'post_status'           => 'hidden', //publish=public,hidden,private assume all hidden
+							'post_status'           => 'public', //publish=public,hidden,private assume all hidden
 							'comment_status'        => 'closed',
 							'ping_status'           => 'open',
 							'post_password'         => '',
