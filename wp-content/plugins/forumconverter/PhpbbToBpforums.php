@@ -30,8 +30,8 @@
 			$wpdb = new wpdb($this->forumLoginDst->username, $this->forumLoginDst->password, $this->forumLoginDst->databasename, $this->forumLoginDst->hostname);
 
 			$dbver = $wpdb->get_var('SELECT meta_value FROM '.$wpdb->prefix.'bb_meta WHERE meta_key="bb_db_version"');
-			if ($dbver != '2078' || true)
-				$this->fc_die('conversion is not supported');
+#			if ($dbver != '2078' || true)
+#				$this->fc_die('conversion is not supported');
 			
 			$this->siteurl = $wpdb->get_var('SELECT option_value FROM '.$wpdb->prefix.'options WHERE option_name="siteurl"');
 			

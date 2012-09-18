@@ -35,7 +35,7 @@
 			                            '165',   //2.0-rc-4
 			                            '200'    //2.0 final
 			                            ))) 
-				$this->fc_die('conversion is not supported');
+#				$this->fc_die('conversion is not supported');
 			
 			$this->siteurl = site_url();
 			$this->processAttachments = true;
@@ -56,6 +56,7 @@
 				if (function_exists('bp_core_avatar_upload_path'));
 					$this->dstAvatarPath = bp_core_avatar_upload_path(); //BuddyPress 1.5-beta-2
 			}
+			$dblinks = $wpdb->get_var('SELECT option_value FROM '.$wpdb->prefix.'options WHERE option_name="permalink_structure"');
 		}
 		
 		//phpBB 3.0.8 to bbPress 2.0 beta 3
@@ -212,7 +213,7 @@
 					//fix name for permalinks
 					$r = $wpdb->get_results('SELECT * FROM '.$wpdb->prefix.'posts WHERE post_name LIKE "%'.$this->convertName($srcforum->forum_name).'%"');
 					$status = $wpdb->update($wpdb->prefix.'posts',
-						array('post_name' => $this->convertName($srcforum->forum_name).($wpdb->num_rows == 0 ? '' : '-'.($wpdb->num_rows + 1))),
+						array('post_name' => $this->convertName($srcforum->forum_name)),#.($wpdb->num_rows == 0 ? '' : '-'.($wpdb->num_rows + 1))),
 						array('ID' => $insertId),
 						array('%s'),
 						array('%d')
@@ -232,7 +233,8 @@
 						$this->fc_die('failed to update guid: '.$wpdb->last_error);
 					
 					$status = $wpdb->update($wpdb->prefix.'posts',
-						array('post_name' => $insertId), //intentional no seo crap
+            array('post_name' => $this->convertName($srcforum->forum_name)),	
+  #          array('post_name' => $insertId), //intentional no seo crap
 						array('ID' => $insertId),
 						array('%s'),
 						array('%d')
@@ -467,6 +469,7 @@
 			$forums = $wpdb->get_results('SELECT * FROM '.$wpdb->prefix.'fc_map_forums WHERE phpbb_parent_id<>0');
 			if ($forums === false)
 				$this->fc_die('failed to get children: '.$wpdb->last_error);
+      $this->fc_echo('number of relinking forums:'. $wpdb->num_rows);
 			if ($wpdb->num_rows > 0)
 			{
 				foreach ($forums as $forum)
@@ -527,7 +530,7 @@
 				$index++;
 			}
 			$status = $wpdb->insert($wpdb->prefix.'options', 
-				array( 'blog_id' => 0, 
+				array( 'option_id' => 0, 
 					   'option_name'   => '_bbp_private_forums', 
 					   'option_value' => 'a:'.(count($forums_private)+1).':{i:0;s:0:"";'.$out.'}',
 					   'autoload' => 'yes'
@@ -550,7 +553,7 @@
 				$index++;
 			}
 			$status = $wpdb->insert($wpdb->prefix.'options', 
-				array( 'blog_id' => 0, 
+				array( 'option_id' => 0, 
 					   'option_name'   => '_bbp_hidden_forums', 
 					   'option_value' => 'a:'.(count($forums_hidden)+1).':{i:0;s:0:"";'.$out.'}',
 					   'autoload' => 'yes'
@@ -604,7 +607,7 @@
 				foreach ($srcposts as $data)
 				{
 					//link
-					//$this->fc_echo('converting '.$data->post_subject.'<br/>');	
+					$this->fc_echo('converting '.$data->post_subject.'<br/>');	
 					$status = $wpdb->insert($wpdb->prefix.'posts', 
 						array(
 							'post_author'           => 1,
@@ -939,12 +942,12 @@
 			{
 				foreach($posts as $post)
 				{
-					//$this->fc_echo('linking post #'.$post->id.'<br/>');
+					$this->fc_echo('linking post #'.$post->id.'<br/>');
 					//topic_first_post_id
 					$topic = $fdb->get_row('SELECT * FROM '.$this->forumLoginSrc->prefix.'topics WHERE topic_first_post_id='.$post->phpbb_id);
 					if ($topic !== NULL)
 					{
-						//$this->fc_echo('marking as topic<br/>');
+						$this->fc_echo('marking as topic<br/>');
 						//locate forum/subforum
 						$forum = $wpdb->get_row('SELECT * FROM '.$wpdb->prefix.'fc_map_forums WHERE phpbb_id='.$post->phpbb_forum_id);
 						if ($forum === NULL)
@@ -1075,7 +1078,7 @@
 					}
 					else
 					{
-						//$this->fc_echo('marking as reply<br/>');
+						$this->fc_echo('marking as reply<br/>');
 						//locate topic
 						$srctopic = $fdb->get_row('SELECT * FROM '.$this->forumLoginSrc->prefix.'topics WHERE topic_id='.$post->phpbb_topic_id);
 						if ($srctopic === NULL)
@@ -1878,7 +1881,7 @@
 							$this->fc_echo('transfering avatar<br/>');
 
 							if (is_dir ($this->dstAvatarPath.DIRECTORY_SEPARATOR.'avatars'.DIRECTORY_SEPARATOR.$insertId) == FALSE)
-								mkdir($this->dstAvatarPath.DIRECTORY_SEPARATOR.'avatars'.DIRECTORY_SEPARATOR.$insertId,0644,true);
+								mkdir($this->dstAvatarPath.DIRECTORY_SEPARATOR.'avatars'.DIRECTORY_SEPARATOR.$insertId,0777,true);
 
 							//large
 							$filename = $found;
@@ -1886,6 +1889,7 @@
 							$filename = str_replace('.gif', '-bpfull.gif', $filename);
 							$filename = str_replace('.png', '-bpfull.png', $filename);
 							$status = copy($this->forumLoginSrc->avatarpath.DIRECTORY_SEPARATOR.$found, $this->dstAvatarPath.DIRECTORY_SEPARATOR.'avatars'.DIRECTORY_SEPARATOR.$insertId.DIRECTORY_SEPARATOR.$filename);
+							$this->fc_echo($filename . '<br/>');
 							if ($status == FALSE)
 								$this->fc_echo('failed to copy file<br/>');
 
