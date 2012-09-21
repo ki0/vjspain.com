@@ -14,24 +14,20 @@ my $dbh1 = DBI->connect("dbi:mysql:database=$db1;host=$host", $user, $pw, {Raise
 my $dbh2 = DBI->connect("dbi:mysql:database=$db2;host=$host", $user, $pw, {RaiseError => 1});
 my $dbh3 = DBI->connect("dbi:mysql:database=$db3;host=$host", $user, $pw, {RaiseError => 1});
 
-my $sth = $dbh1->prepare("SELECT * FROM userlist");
+my $sql = "SELECT * FROM userlist";
+my $sth = $dbh1->prepare($sql);
 $sth->execute();
 while ( my @row = $sth->fetchrow_array ){
   print "@row\n";
 }
 
-$sth = $dbh3->prepare("DELETE FROM phpbb_users WHERE user_posts = 0 and user_lastvisit = 0");
+$sql = "DELETE FROM comunidad WHERE visitas = 0 AND newsletter = 0";
+$sth = $dbh1->prepare($sql);
 $sth->execute();
 
-$sth = $dbh1->prepare("DELETE FROM comunidad WHERE visitas = 0 AND newsletter = 0");
-$sth->execute();
-
-$sth = $dbh1->prepare("SELECT fechaAlta, nombre, apellidos, web, email, usuario, salasana  FROM comunidad WHERE 1");
+$sql = "SELECT fechaAlta, nombre, apellidos, web, email, usuario, salasana  FROM comunidad WHERE 1";
+$sth = $dbh1->prepare($sql);
 $sth->execute();
 while ( my @row = $sth->fetchrow_array ){
   print "@row\n";
 }
-$dbh1->disconnect;
-$dbh2->disconnect;
-$dbh3->disconnect;
-
