@@ -5,6 +5,7 @@ use strict;
 use DBI;
 use Digest::MD5 qw( md5_hex );
 use DateTime;
+use Text::Unaccent;
 
 my $host = "localhost";
 my $db1 = "webvj";
@@ -53,7 +54,7 @@ $sel = $dbh1->prepare("SELECT * FROM noticias_categorias WHERE 1");
 $sel->execute();
 while ( my $row = $sel->fetchrow_hashref ){
   print "$$row{'id'}";
-  (my $term = $$row{'categoria'}) =~ s/_ (\w+)/$1/;
+  (my $term = unac_string('utf8', $$row{'categoria'})) =~ s/_ (\w+)/$1/;
   $term =~ s/(\w+)/\L$1/;
   $term =~ s/(\w+) (\w+)/\L$1-$2/;
   $term =~ s/(\w+) - (\w+)/\L$1-$2/;
@@ -62,7 +63,7 @@ while ( my $row = $sel->fetchrow_hashref ){
   my $ins = $dbh2->prepare("INSERT INTO 
                             wp_terms (term_id, name, slug, term_group) 
                             values (?,?,?,?)");
-                          #$ins->execute($$row{'id'}, $$row{'categoria'}, $term, 0 );
+  #$ins->execute($$row{'id'}, $$row{'categoria'}, $term, 0 );
 }
 
 
