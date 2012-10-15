@@ -6,8 +6,9 @@ use strict;
 use DBI;
 use Digest::MD5 qw( md5_hex );
 use DateTime;
-use Text::Unaccent;
 use Unicode::Normalize;
+use Data::Dumper;
+binmode STDOUT, ':utf8';
 
 my $host = "localhost";
 my $db1 = "webvj";
@@ -21,10 +22,12 @@ my $dbh2 = DBI->connect("dbi:mysql:database=$db2;host=$host", $user, $pw, {Raise
 my $dbh3 = DBI->connect("dbi:mysql:database=$db3;host=$host", $user, $pw, {RaiseError => 1});
 
 my $dt = DateTime->now();
-my $date = $dt->ymd . " " . $dt->hms;
+our $date = $dt->ymd . " " . $dt->hms;
+
+our $siteurl = $dbh2->selectrow_array("SELECT option_value FROM wp_options WHERE option_id = 1 AND option_name = 'siteurl'");
 
 my $sel = $dbh1->prepare("SELECT id, usuario, clave, email FROM userlist");
-$sel->execute();
+$sel->execute() or die $dbh1->errstr;
 while ( my $row = $sel->fetchrow_hashref ){
   #print "$$row{'id'} $$row{'usuario'} $$row{'clave'} ", md5_hex($$row{'clave'}), " $date  $$row{'email'}\n";
   my $ins = $dbh2->prepare("INSERT INTO wp_users (
@@ -51,7 +54,7 @@ $del = $dbh1->prepare("DELETE FROM comunidad WHERE visitas = 0 AND newsletter = 
 $del->execute();
 
 $sel = $dbh1->prepare("SELECT id, fechaAlta, nombre, apellidos, web, email, usuario, salasana  FROM comunidad WHERE 1");
-$sel->execute();
+$sel->execute() or die $dbh1->errstr;
 while ( my $row = $sel->fetchrow_hashref ){
   #print "$$row{'id'} $$row{'fechaAlta'} $$row{'nombre'} $$row{'apellidos'} $$row{'web'} $$row{'email'} $$row{'usuario'} $$row{'salasana'} ", md5_hex($$row{'salasana'}), "\n";
   my $ins = $dbh2->prepare("INSERT INTO wp_users (
@@ -68,31 +71,33 @@ while ( my $row = $sel->fetchrow_hashref ){
                             spam, 
                             deleted) 
                             values (?,?,?,?,?,?,?,?,?,?,?,?)");
-#  $ins->execute($$row{'id'}, $$row{'usuario'}, md5_hex($$row{'salasana'}), $$row{'nombre'} . " " . $$row{'apellidos'}, $$row{'email'}, $$row{'web'}, $$row{'fechaAlta'}, " ", 0, $$row{'usuario'}, 0, 0 );
+#  $ins->execute($$row{'id'}, $$row{'usuario'}, md5_hex($$row{'salasana'}), $$row{'nombre'} . " " . $$row{'apellidos'}, $$row{'email'}, $$row{'web'}, $$row{'fechaAlta'}, " ", 0, $$row{'usuario'}, 0, 0 ) or die $dbh2->errstr;
 }
 
-$del = $dbh2->prepare("DELETE FROM wp_terms WHERE 1");
-#$del->execute();
 $del = $dbh2->prepare("DELETE FROM wp_term_taxonomy WHERE 1");
-#$del->execute();
+$del->execute() or die $dbh2->errstr;
 
 $sel = $dbh1->prepare("SELECT * FROM noticias_categorias WHERE 1");
-$sel->execute();
+$sel->execute() or die $dbh1->errstr;
 while ( my $row = $sel->fetchrow_hashref ){
-  #print "$$row{'id'}";
+  utf8::decode($$row{'categoria'});
+  #print Dumper($$row{'categoria'}) . " " ;
   my $term = slugify($$row{'categoria'});
-  #print " $term\n";
-  my $ins = $dbh2->prepare("INSERT INTO wp_terms (term_id, name, slug, term_group) values (?,?,?,?)");
-  #$ins->execute($$row{'id'}, $$row{'categoria'}, $term, 0 );
-  $ins = $dbh2->prepare("INSERT INTO wp_term_taxonomy (term_taxonomy_id, term_id, taxonomy, description, parent, count) values (?,?,?,?,?,?)");
+  #print  Dumper($term) . "\n";
+  $dbh2->do("REPLACE INTO wp_terms SET term_id=?, name=?, slug=?, term_group=?", undef, $$row{'id'}, $$row{'categoria'}, $term, 0) or die $dbh2->errstr;
+  $dbh2->do("REPLACE INTO wp_term_taxonomy SET term_taxonomy_id=?, term_id=?, taxonomy=?, description=?, parent=?, count=?", undef, undef, $$row{'id'}, 'category', '', 0, 0) or die $dbh2->errstr;
   #print nextid_wp('wp_term_taxonomy');
-  #$ins->execute(nextid_wp('wp_term_taxonomy'), $$row{'id'}, "category", " ", 0, 0);
 }
 
-$sel = $dbh1->prepare("SELECT * FROM noticias WHERE 1");
+$sel = $dbh1->prepare("SELECT * FROM noticias WHERE 1 ORDER BY id");
 $sel->execute();
 while ( my $row = $sel->fetchrow_hashref ){
-  
+  my $content = addimg($$row{'id'}, $$row{'foto_url'}) unless !defined($$row{'foto_url'});
+  $content .= '<br />' . $$row{'texto'};
+  $content .= '<br />' . $$row{'video'} unless ($$row{'video'} eq '' or !defined($$row{'video'}));
+  $content .= '<br />' . '<a href="' . $$row{'enlace1'} . '">' . $$row{'enlace1'} . '<\a>' unless $$row{'enlace1'} eq '';
+  $content .= '<br />' . '<a href="' . $$row{'enlace2'} . '">' . $$row{'enlace2'} . '<\a>' unless $$row{'enlace2'} eq '';
+  next if addtags($$row{'id'}, $$row{'tags'});
 #  my $ins = $dbh2->prepare("INSERT INTO wp_post (
 #                            ID, 
 #                            post_autor, 
@@ -118,30 +123,80 @@ while ( my $row = $sel->fetchrow_hashref ){
 #                            post_mime_type, 
 #                            comment_count) 
 #                            values (?,?,?,?,?,?,?,?,?,?,?,?)");
-#   $ins->execute($$row{'id'}, 1, $$row{'post_date'}, $$row{'post_date_gmt'}, $$row{'post_content'}, $$row{'post_title'}, $$row{'post_excerpt'}, $$row{'post_status4'}, " ", 0, $$row{'usuario'}, 0, 0 );
+#   $ins->execute($$row{'id'}, 1, $$row{'post_date'}, $$row{'post_date_gmt'}, $$row{'post_content'}, $$row{'post_title'}, $$row{'post_excerpt'}, $$row{'post_status4'}, " ", 0, $$row{'usuario'}, 0, 0) or die $dbh2->errstr;
 }
+$sel->finish();
 $dbh1->disconnect();
 $dbh2->disconnect();
 $dbh3->disconnect();
 
+sub addimg {
+  my ($id, $img) = shift(@_);
+#  print "$id $img\n";
+  return;
+}
+
+sub addtags {
+  my ($id, $input) = @_;
+
+  utf8::decode($input);
+  if ( $input =~ /\r/ ){
+    $input =~ tr/\r\n//d;
+    $input =~ s/\s+/,/g;
+    $input =~ s/.$//g;
+  }
+  my @values = split(',', $input);
+  foreach my $tag (@values){
+    $tag =~ s/^\s+|\s+$//g;
+    if ( $tag gt '' ){
+      utf8::decode($tag);
+      print "$id " . slugify($tag) ." /// $tag /// ". Dumper($tag);
+      if (exit_wp( slugify($tag), "wp_terms", "slug")){
+        my $sel = $dbh2->selectrow_hashref("SELECT term_id FROM wp_terms WHERE slug = \'". slugify($tag) ."\'") or die $dbh2->errstr;
+        my $upd = $dbh2->prepare("UPDATE wp_term_taxonomy SET count=count+1 WHERE taxonomy='post_tag' AND term_id = ". $$sel{'term_id'} ."") or die $dbh2->errstr;
+        $upd->execute();
+      } else {
+        $dbh2->do("REPLACE INTO wp_terms SET term_id=?, name=?, slug=?, term_group=?", undef, undef, $tag, slugify($tag), 0) or die $dbh2->errstr;
+        my $term = $dbh2->selectrow_hashref("SELECT term_id FROM wp_terms WHERE name=\'". $tag ."\' AND slug=\'". slugify($tag) ."\'") or die $dbh2->errstr;
+        $dbh2->do("REPLACE INTO wp_term_taxonomy SET term_taxonomy_id=?, term_id=?, taxonomy=?, description=?, parent=?, count=?", undef, undef, $$term{'term_id'}, 'post_tag', '', 0, 0) or die $dbh2->errstr;
+        my $term_tax = $dbh2->selectrow_hashref("SELECT term_taxonomy_id FROM wp_term_taxonomy WHERE term_id=". $$term{'term_id'} ."") or die $dbh2->errstr;
+        my $ins = $dbh2->prepare("INSERT INTO wp_term_relationships(object_id, term_taxonomy_id, term_order) VALUES (?,?,?)");
+        $ins->execute($id, $$term_tax{'term_taxonomy_id'}, 0) or die $dbh2->errstr;
+      }
+    }
+  }
+  return 1;
+}
+
 sub slugify {
   my $input = shift(@_);
   
-  $input = unac_string('UTF8', $input);
+  #print "real:" . Dumper($input);
   $input = NFKD($input);
-  $input =~ tr/\000-\177//cd;
+  #print "normalize: " . Dumper($input);
+  $input =~ s/\pM//og;
+  #print "subtitute: " . Dumper($input);
   $input =~ s/[^\w\s-]//g;
   $input =~ s/^\s+|\s+$//g;
   $input = lc($input);
-  $input =~s/[-\s]+/-/g;
+  $input =~ s/[-\s]+/-/g;
   return $input;
 }
 
 sub nextid_wp {
-  my $input = shift(@_);
+  my ($id, $table) = @_;
 
-  my $sel = $dbh2->prepare("SELECT * FROM " . $input . " WHERE 1");
+  my $sel = $dbh2->prepare("SELECT MAX(" . $id . ") FROM " . $table . " WHERE 1") or die $dbh2->errstr;
   $sel->execute();
   return $sel->rows + 1;
+}
+
+sub exit_wp {
+  my ($tag, $table, $col) = @_;
+
+  my $sel = $dbh2->prepare("SELECT * FROM " . $table . " WHERE " . $col . " = \'" . $tag ."\'") or die $dbh2->errstr;
+  $sel->execute();
+  return 1 if $sel->rows >= 1;
+  return 0;
 }
 1;
