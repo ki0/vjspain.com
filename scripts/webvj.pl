@@ -80,8 +80,7 @@ $del->execute() or die $dbh2->errstr;
 $sel = $dbh1->prepare("SELECT * FROM noticias_categorias WHERE 1");
 $sel->execute() or die $dbh1->errstr;
 while ( my $row = $sel->fetchrow_hashref ){
-  utf8::decode($$row{'categoria'});
-  #print Dumper($$row{'categoria'}) . " " ;
+  print Dumper($$row{'categoria'}) . " " ;
   my $term = slugify($$row{'categoria'});
   #print  Dumper($term) . "\n";
   $dbh2->do("REPLACE INTO wp_terms SET term_id=?, name=?, slug=?, term_group=?", undef, $$row{'id'}, $$row{'categoria'}, $term, 0) or die $dbh2->errstr;
@@ -93,38 +92,48 @@ $sel = $dbh1->prepare("SELECT * FROM noticias WHERE 1 ORDER BY id");
 $sel->execute();
 while ( my $row = $sel->fetchrow_hashref ){
   my $content = addimg($$row{'id'}, $$row{'foto_url'}) unless !defined($$row{'foto_url'});
-  $content .= '<br />' . $$row{'texto'};
+  #$content .= '<br />' . normalize($$row{'texto'});
+  $content .= '<br />' .$$row{'texto'};
   $content .= '<br />' . $$row{'video'} unless ($$row{'video'} eq '' or !defined($$row{'video'}));
-  $content .= '<br />' . '<a href="' . $$row{'enlace1'} . '">' . $$row{'enlace1'} . '<\a>' unless $$row{'enlace1'} eq '';
-  $content .= '<br />' . '<a href="' . $$row{'enlace2'} . '">' . $$row{'enlace2'} . '<\a>' unless $$row{'enlace2'} eq '';
-  next if addtags($$row{'id'}, $$row{'tags'});
-#  my $ins = $dbh2->prepare("INSERT INTO wp_post (
-#                            ID, 
-#                            post_autor, 
-#                            post_date, 
-#                            post_date_gmt, 
-#                            post_content, 
-#                            post_title, 
-#                            post_excerpt, 
-#                            post_status, 
-#                            comment_status, 
-#                            ping_status, 
-#                            post_password, 
-#                            post_name, 
-#                            to_ping, 
-#                            pinged, 
-#                            post_modified, 
-#                            post_modified_gmt, 
-#                            post_content_filtered, 
-#                            post_parent, 
-#                            guid, 
-#                            menu_order, 
-#                            post_type, 
-#                            post_mime_type, 
-#                            comment_count) 
-#                            values (?,?,?,?,?,?,?,?,?,?,?,?)");
-#   $ins->execute($$row{'id'}, 1, $$row{'post_date'}, $$row{'post_date_gmt'}, $$row{'post_content'}, $$row{'post_title'}, $$row{'post_excerpt'}, $$row{'post_status4'}, " ", 0, $$row{'usuario'}, 0, 0) or die $dbh2->errstr;
+  $content .= '<br />' . '<a href="' . $$row{'enlace1'} . '">' . $$row{'enlace1'} unless $$row{'enlace1'} eq '';
+  $content .= '<br />' . '<a href="' . $$row{'enlace2'} . '">' . $$row{'enlace2'} unless $$row{'enlace2'} eq '';
+  addtags($$row{'id'}, $$row{'tags'});
+  my $guid = $siteurl . "/" . slugify($$row{'titulo'}) . "/";
+  print "guid: " . Dumper($guid);
+  my $ins = $dbh2->prepare("INSERT INTO wp_posts (
+                            ID, 
+                            post_author, 
+                            post_date, 
+                            post_date_gmt, 
+                            post_content, 
+                            post_title, 
+                            post_excerpt, 
+                            post_status, 
+                            comment_status, 
+                            ping_status, 
+                            post_password, 
+                            post_name, 
+                            to_ping, 
+                            pinged, 
+                            post_modified, 
+                            post_modified_gmt, 
+                            post_content_filtered, 
+                            post_parent, 
+                            guid, 
+                            menu_order, 
+                            post_type, 
+                            post_mime_type, 
+                            comment_count) 
+                            values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+  $ins->execute($$row{'id'}, 1, $date, $date, $content, normalize($$row{'titulo'}), '', 'publish', 'open', 'open', '', slugify($$row{'titulo'}), '', '', $date, $date, '', 0, $guid, 0, 'post', '', 0) or die $dbh2->errstr;
 }
+
+$sel = $dbh1->prepare("SELECT * FROM noticias_comentarios WHERE 1");
+$sel->execute();
+while ( my $row = $sel->fetchrow_hashref ){
+
+}
+
 $sel->finish();
 $dbh1->disconnect();
 $dbh2->disconnect();
@@ -139,7 +148,6 @@ sub addimg {
 sub addtags {
   my ($id, $input) = @_;
 
-  utf8::decode($input);
   if ( $input =~ /\r/ ){
     $input =~ tr/\r\n//d;
     $input =~ s/\s+/,/g;
@@ -149,8 +157,7 @@ sub addtags {
   foreach my $tag (@values){
     $tag =~ s/^\s+|\s+$//g;
     if ( $tag gt '' ){
-      utf8::decode($tag);
-      print "$id " . slugify($tag) ." /// $tag /// ". Dumper($tag);
+      #print "$id " . slugify($tag) ." /// $tag /// ". Dumper($tag);
       if (exit_wp( slugify($tag), "wp_terms", "slug")){
         my $sel = $dbh2->selectrow_hashref("SELECT term_id FROM wp_terms WHERE slug = \'". slugify($tag) ."\'") or die $dbh2->errstr;
         my $upd = $dbh2->prepare("UPDATE wp_term_taxonomy SET count=count+1 WHERE taxonomy='post_tag' AND term_id = ". $$sel{'term_id'} ."") or die $dbh2->errstr;
@@ -171,6 +178,7 @@ sub addtags {
 sub slugify {
   my $input = shift(@_);
   
+  utf8::decode($input);
   #print "real:" . Dumper($input);
   $input = NFKD($input);
   #print "normalize: " . Dumper($input);
@@ -180,6 +188,18 @@ sub slugify {
   $input =~ s/^\s+|\s+$//g;
   $input = lc($input);
   $input =~ s/[-\s]+/-/g;
+  return $input;
+}
+
+sub normalize {
+  my $input = shift(@_);
+
+  utf8::decode($input);
+  print "real: " . Dumper($input);
+  $input = NFD($input);
+  print "normalize: " . Dumper($input);
+  utf8::encode($input);
+  print "encode: " . Dumper($input);
   return $input;
 }
 
