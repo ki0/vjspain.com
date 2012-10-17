@@ -31,19 +31,19 @@ $sel->execute() or die $dbh1->errstr;
 while ( my $row = $sel->fetchrow_hashref ){
   #print "$$row{'id'} $$row{'usuario'} $$row{'clave'} ", md5_hex($$row{'clave'}), " $date  $$row{'email'}\n";
   my $ins = $dbh2->prepare("INSERT INTO wp_users (
-                            ID, 
-                            user_login, 
-                            user_pass, 
-                            user_nicename, 
-                            user_email, 
-                            user_url, 
-                            user_registered, 
-                            user_activation_key, 
-                            user_status, 
-                            display_name, 
-                            spam, 
-                            deleted) 
-                            values (?,?,?,?,?,?,?,?,?,?,?,?)");
+    ID, 
+    user_login, 
+    user_pass, 
+    user_nicename, 
+    user_email, 
+    user_url, 
+    user_registered, 
+    user_activation_key, 
+    user_status, 
+    display_name, 
+    spam, 
+    deleted) 
+    values (?,?,?,?,?,?,?,?,?,?,?,?)");
 #  $ins->execute(3, $$row{'usuario'}, md5_hex($$row{'clave'}), $$row{'usuario'}, $$row{'email'}, "http://vjspain.com", $date, " ", 0, $$row{'usuario'}, 0, 0 );
 }
 
@@ -58,19 +58,19 @@ $sel->execute() or die $dbh1->errstr;
 while ( my $row = $sel->fetchrow_hashref ){
   #print "$$row{'id'} $$row{'fechaAlta'} $$row{'nombre'} $$row{'apellidos'} $$row{'web'} $$row{'email'} $$row{'usuario'} $$row{'salasana'} ", md5_hex($$row{'salasana'}), "\n";
   my $ins = $dbh2->prepare("INSERT INTO wp_users (
-                            ID, 
-                            user_login, 
-                            user_pass, 
-                            user_nicename, 
-                            user_email, 
-                            user_url, 
-                            user_registered, 
-                            user_activation_key, 
-                            user_status, 
-                            display_name, 
-                            spam, 
-                            deleted) 
-                            values (?,?,?,?,?,?,?,?,?,?,?,?)");
+    ID, 
+    user_login, 
+    user_pass, 
+    user_nicename, 
+    user_email, 
+    user_url, 
+    user_registered, 
+    user_activation_key, 
+    user_status, 
+    display_name, 
+    spam, 
+    deleted) 
+    values (?,?,?,?,?,?,?,?,?,?,?,?)");
 #  $ins->execute($$row{'id'}, $$row{'usuario'}, md5_hex($$row{'salasana'}), $$row{'nombre'} . " " . $$row{'apellidos'}, $$row{'email'}, $$row{'web'}, $$row{'fechaAlta'}, " ", 0, $$row{'usuario'}, 0, 0 ) or die $dbh2->errstr;
 }
 
@@ -100,38 +100,54 @@ while ( my $row = $sel->fetchrow_hashref ){
   addtags($$row{'id'}, $$row{'tags'});
   my $guid = $siteurl . "/" . slugify($$row{'titulo'}) . "/";
   print "guid: " . Dumper($guid);
-  my $ins = $dbh2->prepare("INSERT INTO wp_posts (
-                            ID, 
-                            post_author, 
-                            post_date, 
-                            post_date_gmt, 
-                            post_content, 
-                            post_title, 
-                            post_excerpt, 
-                            post_status, 
-                            comment_status, 
-                            ping_status, 
-                            post_password, 
-                            post_name, 
-                            to_ping, 
-                            pinged, 
-                            post_modified, 
-                            post_modified_gmt, 
-                            post_content_filtered, 
-                            post_parent, 
-                            guid, 
-                            menu_order, 
-                            post_type, 
-                            post_mime_type, 
-                            comment_count) 
-                            values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-  $ins->execute($$row{'id'}, 1, $date, $date, $content, normalize($$row{'titulo'}), '', 'publish', 'open', 'open', '', slugify($$row{'titulo'}), '', '', $date, $date, '', 0, $guid, 0, 'post', '', 0) or die $dbh2->errstr;
+  my $ins = $dbh2->do("REPLACE INTO wp_posts SET
+    ID=?, 
+    post_author=?, 
+    post_date=?, 
+    post_date_gmt=?, 
+    post_content=?, 
+    post_title=?, 
+    post_excerpt=?, 
+    post_status=?, 
+    comment_status=?, 
+    ping_status=?, 
+    post_password=?, 
+    post_name=?, 
+    to_ping=?, 
+    pinged=?, 
+    post_modified=?, 
+    post_modified_gmt=?, 
+    post_content_filtered=?, 
+    post_parent=?, 
+    guid=?, 
+    menu_order=?, 
+    post_type=?, 
+    post_mime_type=?, 
+    comment_count=?", 
+    undef, $$row{'id'}, 1, $date, $date, $content, normalize($$row{'titulo'}), '', 'publish', 'open', 'open', '', slugify($$row{'titulo'}), '', '', $date, $date, '', 0, $guid, 0, 'post', '', 0) or die $dbh2->errstr;
 }
 
 $sel = $dbh1->prepare("SELECT * FROM noticias_comentarios WHERE 1");
 $sel->execute();
 while ( my $row = $sel->fetchrow_hashref ){
-
+  $sel = $dbh2->selectrow_hashref("SELECT * from wp_users WHERE ID=\'" . $$row{'id_comunidad'} . "\'") or die $dbh2->errstr;
+  $ins = $dbh2->do("REPLACE INTO wp_comments SET 
+    comment_ID=?, 
+    comment_post_ID=?, 
+    comment_author=?, 
+    comment_author_email=?, 
+    comment_author_url=?,
+    comment_author_IP=?,
+    comment_date=?,
+    comment_date_gmt=?,
+    comment_content=?,
+    comment_karma=?,
+    comment_approved=?,
+    comment_agent=?,
+    comment_type=?,
+    comment_parent=?,
+    user_id=?", 
+    undef, undef, $$row{'id_noticia'}, $$sel{'user_nicename'}, $$sel{'user_mail'}, $$sel{'user_url'}, undef, $date, $date, $$row{'comentario'}, undef, undef, undef, undef, undef, $$row{'id_comunidad'} ) or die $dbh2->errstr;
 }
 
 $sel->finish();
