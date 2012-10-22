@@ -9,14 +9,15 @@ use DateTime;
 use Unicode::Normalize;
 use Data::Dumper;
 use MIME::Type qw( by_suffix );
-binmode STDOUT, ':utf8';
+use Encode;
+binmode STDOUT, 'utf8';
 
 my $host = "localhost";
 my $db1 = "webvj";
 my $db2 = "vjspain";
 my $db3 = "foro";
 my $user = "root";
-my $pw = "francescoq81";
+my $pw = "";
 
 my $dbh1 = DBI->connect("dbi:mysql:database=$db1;host=$host", $user, $pw, {RaiseError => 1});
 my $dbh2 = DBI->connect("dbi:mysql:database=$db2;host=$host", $user, $pw, {RaiseError => 1});
@@ -153,7 +154,7 @@ sub exportposts {
 }
 
 sub exportcomments {
-  my $sel = $dbh1->prepare("SELECT * FROM noticias_comentarios WHERE 1");
+  my $sel = $dbh1->prepare("SELECT * FROM noticias_comentarios WHERE publicado=1");
   $sel->execute();
   while ( my $row = $sel->fetchrow_hashref ){
     my $user = $dbh2->selectrow_hashref("SELECT * from wp_users WHERE ID=\'" . $$row{'id_comunidad'} . "\'") or die $dbh2->errstr;
@@ -181,34 +182,35 @@ sub exportcomments {
 
 sub addimg {
   my ($id, $img) = @_;
-  my $guid = $siteurl . "/wp-content/uploads/2012/10/" . $img . "/";
-  my $mimetype = by_suffix($filepath);
-  my $ins = $dbh2->do("REPLACE INTO wp_posts SET
-    ID=?, 
-    post_author=?, 
-    post_date=?, 
-    post_date_gmt=?, 
-    post_content=?, 
-    post_title=?, 
-    post_excerpt=?, 
-    post_status=?, 
-    comment_status=?, 
-    ping_status=?, 
-    post_password=?, 
-    post_name=?, 
-    to_ping=?, 
-    pinged=?, 
-    post_modified=?, 
-    post_modified_gmt=?, 
-    post_content_filtered=?, 
-    post_parent=?, 
-    guid=?, 
-    menu_order=?, 
-    post_type=?, 
-    post_mime_type=?, 
-    comment_count=?", 
-    undef, undef, 1, $date, $date, '', $img, '', 'inherit', 'open', 'open', '', $img, '', '', $date, $date, '', $id, $guid, 0, 'attachment', $mimetype, 0) or die $dbh2->errstr;
+  my $guid = $siteurl . "/wp-content/uploads/2012/10/" . $img;
+  #my $mimetype = by_suffix($filepath);
+  #my $ins = $dbh2->do("REPLACE INTO wp_posts SET
+  #  ID=?, 
+  #  post_author=?, 
+  #  post_date=?, 
+  #  post_date_gmt=?, 
+  #  post_content=?, 
+  #  post_title=?, 
+  #  post_excerpt=?, 
+  #  post_status=?, 
+  #  comment_status=?, 
+  #  ping_status=?, 
+  #  post_password=?, 
+  #  post_name=?, 
+  #  to_ping=?, 
+  #  pinged=?, 
+  #  post_modified=?, 
+  #  post_modified_gmt=?, 
+  #  post_content_filtered=?, 
+  #  post_parent=?, 
+  #  guid=?, 
+  #  menu_order=?, 
+  #  post_type=?, 
+  #  post_mime_type=?, 
+  #  comment_count=?", 
+  #  undef, undef, 1, $date, $date, '', $img, '', 'inherit', 'open', 'open', '', $img, '', '', $date, $date, '', $id, $guid, 0, 'attachment', $mimetype, 0) or die $dbh2->errstr;
   my $content .= '<a href="'. $guid .'"><img class="aligncenter size-full wp-image-136" title="'.$img.'" src="'. $guid .'" alt="" width="297" height="297" /></a>';
+  #print "Content: " . Dumper($content);
   return $content;
 }
 
@@ -246,6 +248,7 @@ sub slugify {
   my $input = shift(@_);
   
   utf8::decode($input);
+  utf8::decode($input);
   #print "real:" . Dumper($input);
   $input = NFKD($input);
   #print "normalize: " . Dumper($input);
@@ -255,18 +258,25 @@ sub slugify {
   $input =~ s/^\s+|\s+$//g;
   $input = lc($input);
   $input =~ s/[-\s]+/-/g;
+  # print "output: " . $input . "\n";
   return $input;
 }
 
 sub normalize {
   my $input = shift(@_);
 
+  $input = encode('latin1',$input);
   utf8::decode($input);
-  #print "real: " . Dumper($input);
-  $input = NFD($input);
-  #print "normalize: " . Dumper($input);
-  utf8::encode($input);
-  #print "encode: " . Dumper($input);
+  utf8::decode($input);
+  print "real: " . Dumper($input);
+  $input = NFKD($input);
+  print "normalize: " . Dumper($input);
+  $input =~ s/Ã3/ó/og;
+  $input =~ s/Ã¡/á/og;
+  $input =~ s/Ã©/é/og;
+  $input =~ s/Ão/ú/og;
+  $input =~ s/Ã±/ñ/og;
+  $input =~ s/Ã/í/og;
   return $input;
 }
 
