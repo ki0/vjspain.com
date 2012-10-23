@@ -6,10 +6,10 @@ use strict;
 use DBI;
 use Digest::MD5 qw( md5_hex );
 use DateTime;
+use DateTime::Format::Strptime qw();
 use Unicode::Normalize;
 use Data::Dumper;
 use MIME::Type qw( by_suffix );
-use Encode;
 binmode STDOUT, 'utf8';
 
 my $host = "localhost";
@@ -31,6 +31,7 @@ our $siteurl = $dbh2->selectrow_array("SELECT option_value FROM wp_options WHERE
 #exportusers();
 exportcategories();
 exportposts();
+exportcomments();
 $dbh1->disconnect();
 $dbh2->disconnect();
 $dbh3->disconnect();
@@ -59,6 +60,9 @@ sub exportusers {
   }
 
   my $del = $dbh1->prepare("DELETE FROM comunidad WHERE id = 30");
+  $del->execute();
+  
+  $del = $dbh1->prepare("DELETE FROM noticias_comentarios WHERE id_comunidad IN (SELECT id FROM comunidad WHERE visitas = 0 AND newsletter = 0)");
   $del->execute();
 
   $del = $dbh1->prepare("DELETE FROM comunidad WHERE visitas = 0 AND newsletter = 0");
@@ -117,6 +121,12 @@ sub exportposts {
   my $sel = $dbh1->prepare("SELECT * FROM noticias WHERE 1 ORDER BY id");
   $sel->execute();
   while ( my $row = $sel->fetchrow_hashref ){
+    $$row{fecha} .= ' ' . '00:00:00';
+    my $fecha = DateTime::Format::Strptime->new(
+      pattern   => '%Y-%m-%d %T',
+      time_zone => 'local',
+      on_error  => 'croak',
+    );
     my $content = addimg($$row{'id'}, $$row{'foto_url'}) unless !defined($$row{'foto_url'});
     $content .= '<br />' . normalize($$row{'texto'});
     $content .= '<br />' . $$row{'video'} unless ($$row{'video'} eq '' or !defined($$row{'video'}));
@@ -148,16 +158,22 @@ sub exportposts {
       post_type=?, 
       post_mime_type=?, 
       comment_count=?", 
-      undef, $$row{'id'}, 1, $date, $date, $content, normalize($$row{'titulo'}), '', 'publish', 'open', 'open', '', slugify($$row{'titulo'}), '', '', $date, $date, '', 0, $guid, 0, 'post', '', 0) or die $dbh2->errstr;
+      undef, $$row{'id'}, 1, $date, $date, $content, normalize($$row{'titulo'}), '', 'publish', 'open', 'open', '', slugify($$row{'titulo'}), '', '', $fecha->parse_datetime($$row{'fecha'}), $fecha->parse_datetime($$row{'fecha'}) , '', 0, $guid, 0, 'post', '', 0) or die $dbh2->errstr;
   }
   return 1;
 }
 
 sub exportcomments {
   my $sel = $dbh1->prepare("SELECT * FROM noticias_comentarios WHERE publicado=1");
-  $sel->execute();
+  $sel->execute() or die $dbh1->errstr;
   while ( my $row = $sel->fetchrow_hashref ){
-    my $user = $dbh2->selectrow_hashref("SELECT * from wp_users WHERE ID=\'" . $$row{'id_comunidad'} . "\'") or die $dbh2->errstr;
+    my $user = $dbh2->selectrow_hashref("SELECT * FROM wp_users WHERE ID=" . $$row{'id_comunidad'} . "");
+    $$row{fecha} .= ' ' . '00:00:00';
+    my $fecha = DateTime::Format::Strptime->new(
+      pattern   => '%Y-%m-%d %T',
+      time_zone => 'local',
+      on_error  => 'croak',
+    );
     my $ins = $dbh2->do("REPLACE INTO wp_comments SET 
       comment_ID=?, 
       comment_post_ID=?, 
@@ -174,7 +190,7 @@ sub exportcomments {
       comment_type=?,
       comment_parent=?,
       user_id=?", 
-      undef, undef, $$row{'id_noticia'}, $$user{'user_nicename'}, $$user{'user_mail'}, $$user{'user_url'}, undef, $date, $date, $$row{'comentario'}, undef, undef, undef, undef, undef, $$row{'id_comunidad'} ) or die $dbh2->errstr;
+      undef, $$row{'id'}, $$row{'id_noticia'}, $$user{'display_name'}, $$user{'user_email'}, $$user{'user_url'}, '', $fecha->parse_datetime($$row{'fecha'}), $fecha->parse_datetime($$row{'fecha'}), normalize($$row{'comentario'}), '', '', '', '', '', $$row{'id_comunidad'} ) or die $dbh2->errstr;
   }
   return 1;
 }
@@ -259,24 +275,25 @@ sub slugify {
   $input = lc($input);
   $input =~ s/[-\s]+/-/g;
   # print "output: " . $input . "\n";
+  utf8::encode($input);
   return $input;
 }
 
 sub normalize {
   my $input = shift(@_);
 
-  $input = encode('latin1',$input);
   utf8::decode($input);
   utf8::decode($input);
-  print "real: " . Dumper($input);
+  #print "real: " . Dumper($input);
   $input = NFKD($input);
-  print "normalize: " . Dumper($input);
+  #print "normalize: " . Dumper($input);
   $input =~ s/Ã3/ó/og;
   $input =~ s/Ã¡/á/og;
   $input =~ s/Ã©/é/og;
   $input =~ s/Ão/ú/og;
   $input =~ s/Ã±/ñ/og;
   $input =~ s/Ã/í/og;
+  utf8::encode($input);
   return $input;
 }
 
