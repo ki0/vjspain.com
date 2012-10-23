@@ -158,12 +158,14 @@ sub exportposts {
       post_type=?, 
       post_mime_type=?, 
       comment_count=?", 
-      undef, $$row{'id'}, 1, $date, $date, $content, normalize($$row{'titulo'}), '', 'publish', 'open', 'open', '', slugify($$row{'titulo'}), '', '', $fecha->parse_datetime($$row{'fecha'}), $fecha->parse_datetime($$row{'fecha'}) , '', 0, $guid, 0, 'post', '', 0) or die $dbh2->errstr;
+      undef, $$row{'id'}, 1, $fecha->parse_datetime($$row{'fecha'}), $fecha->parse_datetime($$row{'fecha'}), $content, normalize($$row{'titulo'}), '', 'publish', 'open', 'open', '', slugify($$row{'titulo'}), '', '', $date, $date, '', 0, $guid, 0, 'post', '', 0) or die $dbh2->errstr;
   }
   return 1;
 }
 
 sub exportcomments {
+  my $upd = $dbh2->prepare("UPDATE wp_posts SET comment_count=0");
+  $upd->execute() or die $dbh2->errstr;
   my $sel = $dbh1->prepare("SELECT * FROM noticias_comentarios WHERE publicado=1");
   $sel->execute() or die $dbh1->errstr;
   while ( my $row = $sel->fetchrow_hashref ){
@@ -191,6 +193,8 @@ sub exportcomments {
       comment_parent=?,
       user_id=?", 
       undef, $$row{'id'}, $$row{'id_noticia'}, $$user{'display_name'}, $$user{'user_email'}, $$user{'user_url'}, '', $fecha->parse_datetime($$row{'fecha'}), $fecha->parse_datetime($$row{'fecha'}), normalize($$row{'comentario'}), '', '', '', '', '', $$row{'id_comunidad'} ) or die $dbh2->errstr;
+    $upd = $dbh2->prepare("UPDATE wp_posts SET comment_count=comment_count+1 WHERE id = ".$$row{'id_noticia'}."");
+    $upd->execute() or die $dbh2->errstr;
   }
   return 1;
 }
