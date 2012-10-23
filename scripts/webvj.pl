@@ -192,7 +192,7 @@ sub exportcomments {
       comment_type=?,
       comment_parent=?,
       user_id=?", 
-      undef, $$row{'id'}, $$row{'id_noticia'}, $$user{'display_name'}, $$user{'user_email'}, $$user{'user_url'}, '', $fecha->parse_datetime($$row{'fecha'}), $fecha->parse_datetime($$row{'fecha'}), normalize($$row{'comentario'}), '', '', '', '', '', $$row{'id_comunidad'} ) or die $dbh2->errstr;
+      undef, $$row{'id'}, $$row{'id_noticia'}, $$user{'display_name'}, $$user{'user_email'}, $$user{'user_url'}, '', $fecha->parse_datetime($$row{'fecha'}), $fecha->parse_datetime($$row{'fecha'}), normalize($$row{'comentario'}), '', 1, '', '', '', $$row{'id_comunidad'} ) or die $dbh2->errstr;
     $upd = $dbh2->prepare("UPDATE wp_posts SET comment_count=comment_count+1 WHERE id = ".$$row{'id_noticia'}."");
     $upd->execute() or die $dbh2->errstr;
   }
