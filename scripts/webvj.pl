@@ -273,7 +273,7 @@ sub addtags {
       } else {
         $dbh2->do("REPLACE INTO wp_terms SET term_id=?, name=?, slug=?, term_group=?", undef, undef, normalize($tag), slugify($tag), 0) or die $dbh2->errstr;
         my $term = $dbh2->selectrow_hashref("SELECT term_id FROM wp_terms WHERE name=\'". normalize($tag) ."\' AND slug=\'". slugify($tag) ."\'") or die $dbh2->errstr;
-        $dbh2->do("REPLACE INTO wp_term_taxonomy SET term_taxonomy_id=?, term_id=?, taxonomy=?, description=?, parent=?, count=?", undef, undef, $$term{'term_id'}, 'post_tag', '', 0, 0) or die $dbh2->errstr;
+        $dbh2->do("REPLACE INTO wp_term_taxonomy SET term_taxonomy_id=?, term_id=?, taxonomy=?, description=?, parent=?, count=?", undef, undef, $$term{'term_id'}, 'post_tag', '', 0, 1) or die $dbh2->errstr;
         my $term_tax = $dbh2->selectrow_hashref("SELECT term_taxonomy_id FROM wp_term_taxonomy WHERE term_id=". $$term{'term_id'} ."") or die $dbh2->errstr;
         my $ins = $dbh2->prepare("INSERT INTO wp_term_relationships(object_id, term_taxonomy_id, term_order) VALUES (?,?,?)");
         $ins->execute($id, $$term_tax{'term_taxonomy_id'}, 0) or die $dbh2->errstr;
