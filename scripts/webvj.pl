@@ -28,7 +28,10 @@ our $date = $dt->ymd . " " . $dt->hms;
 
 our $siteurl = $dbh2->selectrow_array("SELECT option_value FROM wp_options WHERE option_id = 1 AND option_name = 'siteurl'");
 
-#exportusers();
+my $del = $dbh2->prepare("DELETE FROM wp_posts WHERE 1");
+$del->execute() or die $dbh2->errstr;
+
+exportusers();
 exportcategories();
 exportposts();
 exportcomments();
@@ -62,10 +65,10 @@ sub exportusers {
   my $del = $dbh1->prepare("DELETE FROM comunidad WHERE id = 30");
   $del->execute();
   
-  $del = $dbh1->prepare("DELETE FROM noticias_comentarios WHERE id_comunidad IN (SELECT id FROM comunidad WHERE visitas = 0 AND newsletter = 0)");
+  $del = $dbh1->prepare("DELETE FROM comunidad WHERE visitas = 0 AND newsletter = 0");
   $del->execute();
 
-  $del = $dbh1->prepare("DELETE FROM comunidad WHERE visitas = 0 AND newsletter = 0");
+  $del = $dbh1->prepare("DELETE FROM noticias_comentarios WHERE id_comunidad NOT IN (SELECT id FROM comunidad)");
   $del->execute();
 
   $sel = $dbh1->prepare("SELECT id, fechaAlta, nombre, apellidos, web, email, usuario, salasana  FROM comunidad WHERE 1");
@@ -93,18 +96,22 @@ sub exportusers {
 sub exportcategories {
   my $del = $dbh2->prepare("DELETE FROM wp_term_taxonomy WHERE 1");
   $del->execute() or die $dbh2->errstr;
+  $del = $dbh2->prepare("DELETE FROM wp_terms WHERE 1");
+  $del->execute() or die $dbh2->errstr;
+  $del = $dbh2->prepare("DELETE FROM wp_term_relationships WHERE 1");
+  $del->execute() or die $dbh2->errstr;
 
   my $sel = $dbh1->prepare("SELECT * FROM noticias_categorias WHERE 1");
   $sel->execute() or die $dbh1->errstr;
   while ( my $row = $sel->fetchrow_hashref ){
-    print Dumper($$row{'categoria'}) . " " ;
+    print Dumper($$row{'categoria'});
     my $term = slugify($$row{'categoria'});
     $dbh2->do("REPLACE INTO wp_terms SET 
       term_id=?, 
       name=?, 
       slug=?, 
       term_group=?", 
-      undef, $$row{'id'}, $$row{'categoria'}, $term, 0) or die $dbh2->errstr;
+      undef, $$row{'id'}, normalize($$row{'categoria'}), $term, 0) or die $dbh2->errstr;
     $dbh2->do("REPLACE INTO wp_term_taxonomy SET 
       term_taxonomy_id=?, 
       term_id=?, 
@@ -132,6 +139,7 @@ sub exportposts {
     $content .= '<br />' . $$row{'video'} unless ($$row{'video'} eq '' or !defined($$row{'video'}));
     $content .= '<br />' . '<a href="' . $$row{'enlace1'} . '">' . $$row{'enlace1'} unless $$row{'enlace1'} eq '';
     $content .= '<br />' . '<a href="' . $$row{'enlace2'} . '">' . $$row{'enlace2'} unless $$row{'enlace2'} eq '';
+    linkcategory($$row{'id'}, $$row{'id_categoria'});
     addtags($$row{'id'}, $$row{'tags'});
     my $guid = $siteurl . "/" . slugify($$row{'titulo'}) . "/";
     my $ins = $dbh2->do("REPLACE INTO wp_posts SET
@@ -170,6 +178,7 @@ sub exportcomments {
   $sel->execute() or die $dbh1->errstr;
   while ( my $row = $sel->fetchrow_hashref ){
     my $user = $dbh2->selectrow_hashref("SELECT * FROM wp_users WHERE ID=" . $$row{'id_comunidad'} . "");
+    #print "user: " . Dumper($user);
     $$row{fecha} .= ' ' . '00:00:00';
     my $fecha = DateTime::Format::Strptime->new(
       pattern   => '%Y-%m-%d %T',
@@ -199,6 +208,16 @@ sub exportcomments {
   return 1;
 }
 
+sub linkcategory {
+  my ($id, $category_id) = @_;
+
+  my $term_tax = $dbh2->selectrow_hashref("SELECT term_taxonomy_id FROM wp_term_taxonomy WHERE term_id=". $category_id ."") or die $dbh2->errstr;
+  my $ins = $dbh2->prepare("INSERT INTO wp_term_relationships(object_id, term_taxonomy_id, term_order) VALUES (?,?,?)");
+  $ins->execute($id, $$term_tax{'term_taxonomy_id'}, 0) or die $dbh2->errstr;
+  my $upd = $dbh2->prepare("UPDATE wp_term_taxonomy SET count=count+1 WHERE taxonomy='category' AND term_id = ". $category_id ."") or die $dbh2->errstr;
+  $upd->execute();
+  return;
+}
 
 sub addimg {
   my ($id, $img) = @_;
@@ -252,8 +271,8 @@ sub addtags {
         my $upd = $dbh2->prepare("UPDATE wp_term_taxonomy SET count=count+1 WHERE taxonomy='post_tag' AND term_id = ". $$sel{'term_id'} ."") or die $dbh2->errstr;
         $upd->execute();
       } else {
-        $dbh2->do("REPLACE INTO wp_terms SET term_id=?, name=?, slug=?, term_group=?", undef, undef, $tag, slugify($tag), 0) or die $dbh2->errstr;
-        my $term = $dbh2->selectrow_hashref("SELECT term_id FROM wp_terms WHERE name=\'". $tag ."\' AND slug=\'". slugify($tag) ."\'") or die $dbh2->errstr;
+        $dbh2->do("REPLACE INTO wp_terms SET term_id=?, name=?, slug=?, term_group=?", undef, undef, normalize($tag), slugify($tag), 0) or die $dbh2->errstr;
+        my $term = $dbh2->selectrow_hashref("SELECT term_id FROM wp_terms WHERE name=\'". normalize($tag) ."\' AND slug=\'". slugify($tag) ."\'") or die $dbh2->errstr;
         $dbh2->do("REPLACE INTO wp_term_taxonomy SET term_taxonomy_id=?, term_id=?, taxonomy=?, description=?, parent=?, count=?", undef, undef, $$term{'term_id'}, 'post_tag', '', 0, 0) or die $dbh2->errstr;
         my $term_tax = $dbh2->selectrow_hashref("SELECT term_taxonomy_id FROM wp_term_taxonomy WHERE term_id=". $$term{'term_id'} ."") or die $dbh2->errstr;
         my $ins = $dbh2->prepare("INSERT INTO wp_term_relationships(object_id, term_taxonomy_id, term_order) VALUES (?,?,?)");
@@ -278,8 +297,9 @@ sub slugify {
   $input =~ s/^\s+|\s+$//g;
   $input = lc($input);
   $input =~ s/[-\s]+/-/g;
-  # print "output: " . $input . "\n";
+  #print "output: " . $input . "\n";
   utf8::encode($input);
+  #print "output encode: " . $input . "\n";
   return $input;
 }
 
