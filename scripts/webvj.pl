@@ -9,8 +9,20 @@ use DateTime;
 use DateTime::Format::Strptime qw();
 use Unicode::Normalize;
 use Data::Dumper;
-use MIME::Type qw( by_suffix );
+use Log::Log4perl;
 binmode STDOUT, 'utf8';
+
+my $conf = q(
+  log4perl.rootLogger = INFO, Screen
+  log4perl.appender.Screen = Log::Log4perl::Appender::Screen
+  log4perl.appender.Screen.stderr = 1
+  log4perl.appender.Screen.layout = Log::Log4perl::Layout::SimpleLayout
+);
+
+print Dumper($conf);
+Log::Log4perl::init( \$conf );
+our $log = Log::Log4perl::get_logger();
+$log->info("Init executing");
 
 my $host = "localhost";
 my $db1 = "webvj";
@@ -28,9 +40,7 @@ our $date = $dt->ymd . " " . $dt->hms;
 
 our $siteurl = $dbh2->selectrow_array("SELECT option_value FROM wp_options WHERE option_id = 1 AND option_name = 'siteurl'");
 
-my $del = $dbh2->prepare("DELETE FROM wp_posts WHERE 1");
-$del->execute() or die $dbh2->errstr;
-
+preparedbs();
 exportusers();
 exportcategories();
 exportposts();
@@ -41,7 +51,37 @@ $dbh3->disconnect();
 
 # Functions 
 
+sub preparedbs {
+  $log->info("Preparing databases");
+
+  my $del = $dbh2->prepare("DELETE FROM wp_posts WHERE 1");
+  $del->execute() or die $dbh2->errstr;
+  
+  $del = $dbh3->prepare("DELETE FROM phpbb_users WHERE user_posts = 0 AND user_lastvisit = 0;");
+  $del->execute() or die $dbh3->errstr;
+
+  $del = $dbh1->prepare("DELETE FROM comunidad WHERE id = 30");
+  $del->execute() or die $dbh2->errstr;
+  
+  $del = $dbh1->prepare("DELETE FROM comunidad WHERE visitas = 0 AND newsletter = 0");
+  $del->execute() or die $dbh2->errstr;
+
+  $del = $dbh1->prepare("DELETE FROM noticias_comentarios WHERE id_comunidad NOT IN (SELECT id FROM comunidad)");
+  $del->execute() or die $dbh2->errstr;
+
+  $del = $dbh2->prepare("DELETE FROM wp_term_taxonomy WHERE 1");
+  $del->execute() or die $dbh2->errstr;
+  $del = $dbh2->prepare("DELETE FROM wp_terms WHERE 1");
+  $del->execute() or die $dbh2->errstr;
+  $del = $dbh2->prepare("DELETE FROM wp_term_relationships WHERE 1");
+  $del->execute() or die $dbh2->errstr;
+  
+  return;
+}
+
 sub exportusers {
+  $log->info("Export users");
+
   my $sel = $dbh1->prepare("SELECT id, usuario, clave, email FROM userlist");
   $sel->execute() or die $dbh1->errstr;
   while ( my $row = $sel->fetchrow_hashref ){
@@ -61,15 +101,6 @@ sub exportusers {
       values (?,?,?,?,?,?,?,?,?,?,?,?)");
     $ins->execute(3, $$row{'usuario'}, md5_hex($$row{'clave'}), $$row{'usuario'}, $$row{'email'}, "http://vjspain.com", $date, " ", 0, $$row{'usuario'}, 0, 0 );
   }
-
-  my $del = $dbh1->prepare("DELETE FROM comunidad WHERE id = 30");
-  $del->execute();
-  
-  $del = $dbh1->prepare("DELETE FROM comunidad WHERE visitas = 0 AND newsletter = 0");
-  $del->execute();
-
-  $del = $dbh1->prepare("DELETE FROM noticias_comentarios WHERE id_comunidad NOT IN (SELECT id FROM comunidad)");
-  $del->execute();
 
   $sel = $dbh1->prepare("SELECT id, fechaAlta, nombre, apellidos, web, email, usuario, salasana  FROM comunidad WHERE 1");
   $sel->execute() or die $dbh1->errstr;
@@ -94,12 +125,7 @@ sub exportusers {
 }
 
 sub exportcategories {
-  my $del = $dbh2->prepare("DELETE FROM wp_term_taxonomy WHERE 1");
-  $del->execute() or die $dbh2->errstr;
-  $del = $dbh2->prepare("DELETE FROM wp_terms WHERE 1");
-  $del->execute() or die $dbh2->errstr;
-  $del = $dbh2->prepare("DELETE FROM wp_term_relationships WHERE 1");
-  $del->execute() or die $dbh2->errstr;
+  $log->info("Export categories");
 
   my $sel = $dbh1->prepare("SELECT * FROM noticias_categorias WHERE 1");
   $sel->execute() or die $dbh1->errstr;
@@ -125,6 +151,8 @@ sub exportcategories {
 }
 
 sub exportposts {
+  $log->info("Export posts");
+
   my $sel = $dbh1->prepare("SELECT * FROM noticias WHERE 1 ORDER BY id");
   $sel->execute();
   while ( my $row = $sel->fetchrow_hashref ){
@@ -172,6 +200,8 @@ sub exportposts {
 }
 
 sub exportcomments {
+  $log->info("Export comments");
+
   my $upd = $dbh2->prepare("UPDATE wp_posts SET comment_count=0");
   $upd->execute() or die $dbh2->errstr;
   my $sel = $dbh1->prepare("SELECT * FROM noticias_comentarios WHERE publicado=1");
