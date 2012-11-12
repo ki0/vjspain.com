@@ -42,7 +42,7 @@
 			$this->forumLoginSrc = $forumSrc;
 
 			//timeouts - this may require adjusting based on amount of posts that need to be converted
-			set_time_limit(3600);
+			set_time_limit(360000000);
 
 			$this->dstAvatarPath = '';
 			if (file_exists(WP_PLUGIN_DIR.'/buddypress/bp-core/bp-core-avatars.php'))
@@ -159,7 +159,7 @@
 							'post_content'          => $srcforum->forum_desc,
 							'post_title'            => $this->convertTitle($srcforum->forum_name),
 							'post_excerpt'          => '',
-							'post_status'           => 'public', //publish=public,hidden,private assume all hidden
+							'post_status'           => 'hidden', //publish=public,hidden,private assume all hidden
 							'comment_status'        => 'closed',
 							'ping_status'           => 'open',
 							'post_password'         => '',
@@ -474,7 +474,7 @@
 			{
 				foreach ($forums as $forum)
 				{
-					//$this->fc_echo('linking forum #'.$forum->id.'<br/>');
+					$this->fc_echo('linking forum #'.$forum->id.'<br/>');
 					$parent = $wpdb->get_row('SELECT * FROM '.$wpdb->prefix.'fc_map_forums WHERE phpbb_id='.$forum->phpbb_parent_id);
 					if ($parent === NULL)
 						$this->fc_die('failed to obtain forum id:'.$wpdb->last_error);
