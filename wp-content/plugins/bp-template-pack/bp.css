@@ -7,8 +7,12 @@
 /*--------------------------------------------------------------
 1 - Activity
 --------------------------------------------------------------*/
+#member-dir-pag-top {
+
+}
+
 #activity-stream {
-	margin-top: -5px;
+/* 	margin-top: -5px; */
 }
 #item-body form#whats-new-form {
 	border-bottom: 1px solid #ddd;
@@ -36,16 +40,16 @@ form#whats-new-form #whats-new-content {
 }
 form#whats-new-form textarea {
 	background: #fff;
-	border: 1px inset #ccc;
+/* 	border: 1px inset #ccc; */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	color: #555;
 	font-family: inherit;
 	font-size: 14px;
-	height: 20px;
+	height: 40px;
 	padding: 6px;
-	width: 98%;
+	width: 100%;
 }
 form#whats-new-form #whats-new-options select {
 	max-width: 200px;
@@ -252,8 +256,8 @@ body.activity-permalink div.activity-meta {
 	margin-bottom: 6px;
 }
 div.activity-meta a {
-	font: normal 11px/20px Arial, Tahoma, Verdana, sans-serif;
-	padding: 4px 8px;
+	font: normal 12px/20px Arial, Tahoma, Verdana, sans-serif;
+	padding: 8px 12px;
 }
 a.activity-time-since {
 	color: #aaa;
@@ -278,7 +282,7 @@ a.bp-primary-action span,
 	color: #fff;
 	font-size: 90%;
 	margin-left: 2px;
-	padding: 0 5px;
+	padding: 2px 5px;
 }
 a.bp-primary-action:hover span,
 #reply-title small a:hover span {
@@ -403,7 +407,7 @@ div.activity-comments form textarea {
 	border: none;
 	color: #555;
 	font-family: inherit;
-	font-size: 11px;
+	font-size: 15px;
 	height: 60px;
 	padding: 0;
 	width: 100%;
@@ -492,7 +496,7 @@ div#message.updated p {
 	color: #fff;
 	margin: 0 0 10px 0;
 	padding: 6px;
-	width: 90%;
+	width: 100%;
 }
 div.accept,
 div.reject {
@@ -516,7 +520,7 @@ ul.button-nav li.current a {
 .standard-form select,
 .standard-form input[type=password],
 .dir-search input[type=text] {
-	border: 1px inset #ccc;
+/* 	border: 1px inset #ccc; */
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
@@ -529,13 +533,14 @@ ul.button-nav li.current a {
 	padding: 3px;
 }
 .standard-form input[type=password] {
-	margin-bottom: 5px;
+	margin-bottom: 12px;
 }
 .standard-form label,
 .standard-form span.label {
 	display: block;
 	font-weight: bold;
-	margin: 15px 0 5px 0;
+	margin: 25px 0 5px 0;
+	font-size: 14px;
 }
 .standard-form div.checkbox label,
 .standard-form div.radio label {
@@ -557,17 +562,17 @@ ul.button-nav li.current a {
 }
 .standard-form #basic-details-section input[type=password],
 .standard-form #blog-details-section input#signup_blog_url {
-	width: 35%;
+	width: 100%;
 }
 .standard-form#signup_form input[type=text],
 .standard-form#signup_form textarea,
 .form-allowed-tags,
 #commentform input[type=text],
 #commentform textarea {
-	width: 90%;
+	width: 100%;
 }
 .standard-form#signup_form div.submit {
-	float: right;
+/* 	float: right; */
 }
 div#signup-avatar img {
 	margin: 0 15px 10px 0;
@@ -584,12 +589,14 @@ div#signup-avatar img {
 }
 .standard-form p.description {
 	color: #888;
-	font-size: 11px;
-	margin: 5px 0;
+	font-size: 14px;
+	margin: 5px 0 15px 0;
 }
 .standard-form div.submit {
 	clear: both;
-	padding: 15px 0 0 0;
+/* 	padding: 15px 0 0 0; */
+	margin-top: 40px;
+	margin-bottom: 40px;
 }
 .standard-form p.submit {
 	margin-bottom: 0;
@@ -613,8 +620,18 @@ div#signup-avatar img {
 .standard-form #basic-details-section,
 .standard-form #blog-details-section,
 .standard-form #profile-details-section {
-	float: left;
-	width: 48%;
+background-color: #FFF;
+border: 1px solid #EDEDED;
+padding: 40px;
+margin-bottom: 45px;
+box-shadow: 0 4px 10px -1px rgba(200, 200, 200, 0.7);
+/*
+-moz-box-shadow: 0 0 5px 5px #EDEDED;
+-webkit-box-shadow: 0 0 5px 5px #EDEDED;
+box-shadow: 0 0 5px 5px #EDEDED;
+*/
+
+
 }
 .standard-form #profile-details-section {
 	float: right;
@@ -671,6 +688,8 @@ div.generic-button a,
 	text-align: center;
 	text-decoration: none;
 	line-height: 14px;
+	width: auto;
+	padding: 10px;
 }
 button:hover,
 a.button:hover,
@@ -1146,14 +1165,14 @@ ul.item-list li h5 span.small {
 	font-weight: normal;
 }
 div.item-list-tabs {
-	background: #eaeaea;
+	background: none;
 	clear: left;
-	margin: 25px -19px 20px -19px;
+/* 	margin: 25px 0 20px 0; */
 	overflow: hidden;
 }
 div.item-list-tabs ul li a {
 	text-decoration: none;
-	height: 20px;
+/* 	height: 35px; */
 }
 div.item-list-tabs ul {
 	width: 100%;
@@ -1161,13 +1180,35 @@ div.item-list-tabs ul {
 div.item-list-tabs ul li {
 	float: left;
 	list-style-type: none;
-	margin: 5px 0 0 5px;
+	margin: 5px 0 0 0;
+/* 	border-bottom: 1px solid #EAEAEA; */
 }
+
+div#subnav.item-list-tabs ul li {
+	float: left;
+	list-style-type: none;
+	margin: 5px 0 0 0;
+	border:none;
+}
+
+div.item-list-tabs ul li.selected {
+	border-bottom: 1px solid #FFF;
+}
+
+
+
+div#subnav.item-list-tabs ul li.selected {
+	border: none;
+}
+
+
 div.item-list-tabs#subnav ul li {
 	margin-top: 0;
+	margin-left: 10px;
 }
+
 div.item-list-tabs ul li:first-child {
-	margin-left: 20px;
+/* 	margin-left: 20px; */
 }
 div.item-list-tabs ul li.last {
 	float: right;
@@ -1175,6 +1216,7 @@ div.item-list-tabs ul li.last {
 }
 div.item-list-tabs#subnav ul li.last {
 	margin-top: 4px;
+	float: right;
 }
 div.item-list-tabs ul li.last select {
 	max-width: 175px;
@@ -1182,11 +1224,19 @@ div.item-list-tabs ul li.last select {
 div.item-list-tabs ul li a,
 div.item-list-tabs ul li span {
 	display: block;
-	padding: 5px 10px;
+	padding: 10px 20px 10px 20px;
 	text-decoration: none;
 }
+
+div#subnav.item-list-tabs ul li a,
+div#subnav.item-list-tabs ul li span {
+	display: block;
+	padding: 5px 10px 5px 10px;
+	text-decoration: none;
+}
+
 div.item-list-tabs ul li a span {
-	background: #1fb3dd;
+	background: #D50002;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
@@ -1207,7 +1257,23 @@ div.item-list-tabs ul li.current a {
 	border-top-right-radius: 3px;
 	color: #555;
 	font-weight: bold;
+	border-left: 1px solid #EAEAEA;
+    border-right: 1px solid #EAEAEA;
+    border-top: 1px solid #EAEAEA;
 }
+
+div#subnav.item-list-tabs ul li.selected a,
+div#subnav.item-list-tabs ul li.current a {
+	background-color: #888888;
+	border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+	color: #FFF;
+	font-weight: normal;
+	border: none;
+}
+
 div.item-list-tabs ul li.selected a span,
 div.item-list-tabs ul li.current a span,
 div.item-list-tabs ul li a:hover span {
@@ -1227,27 +1293,30 @@ div#item-nav ul li.loading a {
 	background-position: 88% 50%;
 }
 div.item-list-tabs#object-nav {
-	margin-top: 0;
+	margin: 0;
 }
 div.item-list-tabs#subnav {
 	background: #fff;
-	border-bottom: 1px solid #eaeaea;
-	margin: -15px -19px 15px -19px;
 	min-height: 35px;
 	overflow: hidden;
+	margin-top: 25px;
 }
 div.item-list-tabs ul li.feed a {
 	background: url( ../buddypress/bp-themes/bp-default/_inc/images/rss.png ) center left no-repeat;
-	padding-left: 20px;
+	padding-left: 20px !important;
 }
 #admins-list li {
 	overflow: auto;
 }
 
-
 /*--------------------------------------------------------------
 9 - Private Messaging Threads
 --------------------------------------------------------------*/
+.message-search {
+margin-top: 20px;
+
+}
+
 table#message-threads tr.unread td {
 	background: #fff9db;
 	border-top: 1px solid #ffe8c4;
@@ -1319,8 +1388,8 @@ div#message-thread div.message-options {
 	border: none;
 	color: #888;
 	font-size: 11px;
-	height: 19px;
-	margin: -20px -19px 0px -19px;
+	height: 29px;
+/* 	margin: -20px -19px 0px -19px; */
 	padding: 8px 20px;
 	position: relative;
 }

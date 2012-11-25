@@ -1,0 +1,16 @@
+/*
+Plugin Name: Candy Social Widget
+Author: WPExplorer
+Version: 1.0
+License: GPL
+*/
+
+.candy-clearfix:after {content: ".";display: block;height: 0;clear: both; visibility: hidden;font-size: 0 }
+* html .candy-clearfix {zoom: 1}
+*:first-child+html .candy-clearfix {zoom: 1 }
+.candy-social-icons ul{ margin-right: -5px }
+.candy-social-icons li{ display: inline; float: left; margin-right: 5px; margin-bottom: 5px; }
+.candy-social-icons a{ position: relative }
+.candy-social-icons a img{ max-width: 100%; display: block }
+.candy-social-icons a:hover{ top: -1px }
+.candy-social-icons img:hover{-moz-opacity: 0.8;-khtml-opacity: 0.8;opacity: 0.8 }

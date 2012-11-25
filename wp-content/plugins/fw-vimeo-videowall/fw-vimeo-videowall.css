@@ -1,0 +1,77 @@
+/* 
+    Document   : fw-vimeo-videowall
+    Created on : 15 janv. 2010, 09:29:20
+    Author     : Fairweb
+*/
+
+div.fwvvw_vthumb {
+    float:left;
+/*     padding:3px; */
+/*     border: #ebebeb 1px solid; */
+    margin-bottom:10px;
+    cursor:pointer;
+}
+
+.fwvvw_nodisplay {
+    display:none;
+}
+
+.fwvvw-album, .fwvvw-user, .fwvvw-group, .fwvvw-channel {
+
+}
+
+.fwclear {
+    clear:both;
+}
+
+#fwvvw_full_video {
+    margin-top:-250px;
+    margin-left:-400px;
+    z-index:100;
+    width:800px;
+    height:500px;
+    background:#000;
+    color:#FFF;
+    position:absolute;
+    padding-top:20px;
+    border:#ccc 4px solid;
+	top:50%;
+
+	left:50%;
+        text-align:center;
+}
+
+#fwvvw_bg_video {
+    top:0;
+    left:0;
+    
+    z-index:99;
+    width:100%;
+    height:100%;
+    background:url(images/opacity.png) repeat;
+    color:#FFF;
+    position: fixed;
+    
+}
+
+img.closewindow {
+    display:block;
+    position:absolute;
+    top:10px;
+    right:10px;
+    cursor:pointer;
+}
+
+/* added in v 1.2 */
+.fwvvw-pagination {
+    clear:both;
+}
+
+.fwvvw-pagination a.fwvvw_current_page {
+    border:#ebebeb 1px solid;
+    font-weight:bold;
+}
+
+.fwvvw-videotitle {
+    font-size:0.8em;
+}

@@ -1,0 +1,596 @@
+# Copyright (C) 2011 Welcome Pack
+# This file is distributed under the same license as the Welcome Pack package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Welcome Pack 3.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/welcome-pack\n"
+"POT-Creation-Date: 2011-10-05 18:03:47+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: welcome-pack.php:201 welcome-pack.php:205
+msgid "Emails"
+msgstr ""
+
+#: welcome-pack.php:202
+msgid "Email"
+msgstr ""
+
+#: welcome-pack.php:203 welcome-pack.php:208
+msgid "New email"
+msgstr ""
+
+#: welcome-pack.php:204
+msgid "Create new email"
+msgstr ""
+
+#: welcome-pack.php:206
+msgid "Edit"
+msgstr ""
+
+#: welcome-pack.php:207
+msgid "Edit email"
+msgstr ""
+
+#: welcome-pack.php:209 welcome-pack.php:210
+msgid "View email"
+msgstr ""
+
+#: welcome-pack.php:211
+msgid "Search emails"
+msgstr ""
+
+#: welcome-pack.php:212
+msgid "No emails found"
+msgstr ""
+
+#: welcome-pack.php:213
+msgid "No emails found in Trash"
+msgstr ""
+
+#: welcome-pack.php:489 welcome-pack.php:616
+msgid "Activate Your Account"
+msgstr ""
+
+#: welcome-pack.php:490 welcome-pack.php:620
+msgid "Activate %s"
+msgstr ""
+
+#: welcome-pack.php:491 welcome-pack.php:625
+msgid "New message from %s"
+msgstr ""
+
+#: welcome-pack.php:492 welcome-pack.php:633
+msgid "Group Details Updated"
+msgstr ""
+
+#: welcome-pack.php:493 welcome-pack.php:639
+msgid "Membership request for group: %s"
+msgstr ""
+
+#: welcome-pack.php:494 welcome-pack.php:648
+msgid "Membership request for group \"%s\" accepted"
+msgstr ""
+
+#: welcome-pack.php:495 welcome-pack.php:654
+msgid "Membership request for group \"%s\" rejected"
+msgstr ""
+
+#: welcome-pack.php:496 welcome-pack.php:660
+msgid "You have been promoted in the group: \"%s\""
+msgstr ""
+
+#: welcome-pack.php:497 welcome-pack.php:667
+msgid "You have an invitation to the group: \"%s\""
+msgstr ""
+
+#: welcome-pack.php:498 welcome-pack.php:677
+msgid "%s accepted your friendship request"
+msgstr ""
+
+#: welcome-pack.php:499 welcome-pack.php:684
+msgid "New friendship request from %s"
+msgstr ""
+
+#: welcome-pack.php:500 welcome-pack.php:692
+msgid "%s mentioned you in an update"
+msgstr ""
+
+#: welcome-pack.php:501 welcome-pack.php:708
+msgid "%s replied to one of your updates"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (Welcome Pack 3.0)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: welcome-pack-admin.php:41
+msgid "Welcome Pack"
+msgstr ""
+
+#: welcome-pack-admin.php:66 welcome-pack-admin.php:260
+msgid "Settings"
+msgstr ""
+
+#: welcome-pack-admin.php:91
+msgid ""
+"Choose groups to invite the new user to. You can select as many groups as "
+"you want."
+msgstr ""
+
+#: welcome-pack-admin.php:96
+msgid ""
+"Choose which members will send a friend invitation to the new user. You can "
+"select as many people as you want."
+msgstr ""
+
+#: welcome-pack-admin.php:101
+msgid ""
+"When a user logs in to your site for the first time, they'll be redirected "
+"to this URL. If you want to take them to their user profile, enter "
+"<code>USER_URL</code>."
+msgstr ""
+
+#: welcome-pack-admin.php:106
+msgid ""
+"The subject, sender and message details are mandatory. You can personalise "
+"the message by including their <code>NICKNAME</code> or their "
+"<code>USERNAME</code> in the subject or message."
+msgstr ""
+
+#: welcome-pack-admin.php:112
+msgid ""
+"This screen explains the features in Welcome Pack, and lets you enable them "
+"individually. Check the boxes, and then save changes."
+msgstr ""
+
+#: welcome-pack-admin.php:126
+msgid "Give Kudos"
+msgstr ""
+
+#: welcome-pack-admin.php:130
+msgid "Help Us Help You"
+msgstr ""
+
+#: welcome-pack-admin.php:132
+msgid "Love Welcome Pack?"
+msgstr ""
+
+#: welcome-pack-admin.php:135
+msgid "Latest News"
+msgstr ""
+
+#: welcome-pack-admin.php:144
+msgid "For more information:"
+msgstr ""
+
+#: welcome-pack-admin.php:145
+msgid "Support Forum"
+msgstr ""
+
+#: welcome-pack-admin.php:263 welcome-pack-admin.php:382
+msgid "Friends"
+msgstr ""
+
+#: welcome-pack-admin.php:267 welcome-pack-admin.php:391
+msgid "Groups"
+msgstr ""
+
+#: welcome-pack-admin.php:271 welcome-pack-admin.php:400
+msgid "Start Page"
+msgstr ""
+
+#: welcome-pack-admin.php:275 welcome-pack-admin.php:405
+msgid "Welcome Message"
+msgstr ""
+
+#: welcome-pack-admin.php:278
+msgid "Get Support"
+msgstr ""
+
+#: welcome-pack-admin.php:289
+msgid "Your preferences have been updated."
+msgstr ""
+
+#: welcome-pack-admin.php:333
+msgid ""
+"Have you found a bug or do you have a great idea for the next release? "
+"Please make a report on <a href='%s'>BuddyPress.org</a>, or use the form "
+"below to get in contact. We're listening."
+msgstr ""
+
+#: welcome-pack-admin.php:337
+msgid ""
+"Thanks, we've received your message and have emailed you a copy for your "
+"records. We'll be in touch soon!"
+msgstr ""
+
+#: welcome-pack-admin.php:342
+msgid "What type of request do you have?"
+msgstr ""
+
+#: welcome-pack-admin.php:344
+msgid "Bug report"
+msgstr ""
+
+#: welcome-pack-admin.php:345
+msgid "Idea"
+msgstr ""
+
+#: welcome-pack-admin.php:346
+msgid "Other support request"
+msgstr ""
+
+#: welcome-pack-admin.php:349
+msgid "How can we help?"
+msgstr ""
+
+#: welcome-pack-admin.php:352
+msgid "What's your email address?"
+msgstr ""
+
+#: welcome-pack-admin.php:356
+msgid "Send"
+msgstr ""
+
+#: welcome-pack-admin.php:375
+msgid ""
+"When a user registers on your site, Welcome Pack lets you automatically send "
+"them a friend or group invitation, a Welcome Message and can redirect them "
+"to a Start Page. You can also customise the emails sent by BuddyPress so "
+"that they match your site's brand, in plain text or rich HTML versions."
+msgstr ""
+
+#: welcome-pack-admin.php:377
+msgid "Email Customisation"
+msgstr ""
+
+#: welcome-pack-admin.php:378
+msgid ""
+"Customise the emails sent by BuddyPress, either in plain text or rich HTML "
+"versions. <strong>To change the emails, visit the <a href='%s'>Settings > "
+"Emails</a> page.</strong>"
+msgstr ""
+
+#: welcome-pack-admin.php:379 welcome-pack-admin.php:385
+#: welcome-pack-admin.php:394 welcome-pack-admin.php:402
+#: welcome-pack-admin.php:408
+msgid "On"
+msgstr ""
+
+#: welcome-pack-admin.php:380 welcome-pack-admin.php:386
+#: welcome-pack-admin.php:395 welcome-pack-admin.php:403
+#: welcome-pack-admin.php:409
+msgid "Off"
+msgstr ""
+
+#: welcome-pack-admin.php:384
+msgid ""
+"Invite the new user to become friends with certain members. It's a great way "
+"of teaching people how the friend acceptance process works on your site, and "
+"how they can use friendships to filter activity streams."
+msgstr ""
+
+#: welcome-pack-admin.php:388
+msgid ""
+"BuddyPress' Friend Connections component needs to be enabled for this option "
+"to be active."
+msgstr ""
+
+#: welcome-pack-admin.php:393
+msgid ""
+"Ask the new user if they'd like to join a group. You could use this to "
+"invite all new users on your site to join a support group, to keep all of "
+"your frequently asked questions in the same place."
+msgstr ""
+
+#: welcome-pack-admin.php:397
+msgid ""
+"BuddyPress' User Groups component needs to be enabled for this option to be "
+"active."
+msgstr ""
+
+#: welcome-pack-admin.php:401
+msgid ""
+"When the new user logs into your site for the very first time, use Start "
+"Page to redirect them anywhere you'd like. This complements the Welcome "
+"Message fantastically; create a page or blog post which showcases the "
+"features of your site."
+msgstr ""
+
+#: welcome-pack-admin.php:407
+msgid ""
+"Send the newly-registered user a private message; use this to welcome people "
+"to your site and help them get started."
+msgstr ""
+
+#: welcome-pack-admin.php:411
+msgid ""
+"BuddyPress' Private Messaging component needs to be enabled for this option "
+"to be active."
+msgstr ""
+
+#: welcome-pack-admin.php:414 welcome-pack-admin.php:490
+msgid "Save Changes"
+msgstr ""
+
+#: welcome-pack-admin.php:449
+msgid "Invite the new user to become friends with these people:"
+msgstr ""
+
+#: welcome-pack-admin.php:459
+msgid "Ask the new user if they'd like to join these groups:"
+msgstr ""
+
+#: welcome-pack-admin.php:470
+msgid ""
+"When the new user logs into your site for the very first time, redirect them "
+"to this URL:"
+msgstr ""
+
+#: welcome-pack-admin.php:476
+msgid ""
+"When a user logs in to your site for the first time, send them a message:"
+msgstr ""
+
+#: welcome-pack-admin.php:479
+msgid "Message subject:"
+msgstr ""
+
+#: welcome-pack-admin.php:482
+msgid "Send message from this user:"
+msgstr ""
+
+#: welcome-pack-admin.php:605
+msgid "No news; check back later."
+msgstr ""
+
+#: welcome-pack-admin.php:633
+msgid "No other plugins are active"
+msgstr ""
+
+#: welcome-pack-admin.php:638
+msgid "subdomain"
+msgstr ""
+
+#: welcome-pack-admin.php:640
+msgid "subdirectory"
+msgstr ""
+
+#: welcome-pack-admin.php:643 welcome-pack-admin.php:652
+msgid "no"
+msgstr ""
+
+#: welcome-pack-admin.php:648
+msgid "standard"
+msgstr ""
+
+#: welcome-pack-admin.php:650
+msgid "non-standard"
+msgstr ""
+
+#: welcome-pack-admin.php:657
+msgid "yes"
+msgstr ""
+
+#: welcome-pack-admin.php:660
+msgid "n/a"
+msgstr ""
+
+#: welcome-pack-admin.php:664
+msgid "default"
+msgstr ""
+
+#: welcome-pack-admin.php:668
+msgid "almost"
+msgstr ""
+
+#: welcome-pack-admin.php:670
+msgid "custom"
+msgstr ""
+
+#: welcome-pack-admin.php:673
+msgid ""
+"If you have trouble, a little information about your site goes a long way."
+msgstr ""
+
+#: welcome-pack-admin.php:675
+msgid "Versions"
+msgstr ""
+
+#: welcome-pack-admin.php:677
+msgid "Welcome Pack: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:678
+msgid "BP_ROOT_BLOG: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:679
+msgid "BuddyPress: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:680
+msgid "MySQL: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:681
+msgid "Permalinks: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:682
+msgid "PHP: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:683
+msgid "WordPress: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:684
+msgid "WordPress multisite: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:687
+msgid "Theme"
+msgstr ""
+
+#: welcome-pack-admin.php:689
+msgid "BP-Default child theme: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:690
+msgid "Current theme: %s"
+msgstr ""
+
+#: welcome-pack-admin.php:693
+msgid "Active Plugins"
+msgstr ""
+
+#: welcome-pack-admin.php:712
+msgid "Why not do any or all of the following:"
+msgstr ""
+
+#: welcome-pack-admin.php:714
+msgid "Give it a five star rating on WordPress.org."
+msgstr ""
+
+#: welcome-pack-admin.php:715
+msgid "Write a review on BuddyPress.org."
+msgstr ""
+
+#: welcome-pack-admin.php:716
+msgid "Fund development."
+msgstr ""
+
+#: welcome-pack-admin.php:738
+msgid "PayPal"
+msgstr ""
+
+#: welcome-pack-admin.php:759
+msgid "BP Default"
+msgstr ""
+
+#: welcome-pack-admin.php:759
+msgid "Simplicity"
+msgstr ""
+
+#: welcome-pack-admin.php:799
+msgid "Enter subject here"
+msgstr ""
+
+#: welcome-pack-admin.php:845
+msgid "Email Attributes"
+msgstr ""
+
+#: welcome-pack-admin.php:875 welcome-pack-admin.php:876
+msgid "Use this email for:"
+msgstr ""
+
+#: welcome-pack-admin.php:878
+msgid "-----"
+msgstr ""
+
+#: welcome-pack-admin.php:879
+msgid "Account activation"
+msgstr ""
+
+#: welcome-pack-admin.php:880
+msgid "Account and blog activation"
+msgstr ""
+
+#: welcome-pack-admin.php:881
+msgid "Friendship request accepted"
+msgstr ""
+
+#: welcome-pack-admin.php:882
+msgid "Group details updated"
+msgstr ""
+
+#: welcome-pack-admin.php:883
+msgid "Group membership request"
+msgstr ""
+
+#: welcome-pack-admin.php:884
+msgid "Group membership request accepted"
+msgstr ""
+
+#: welcome-pack-admin.php:885
+msgid "Group membership request rejected"
+msgstr ""
+
+#: welcome-pack-admin.php:886
+msgid "Invitation to a group"
+msgstr ""
+
+#: welcome-pack-admin.php:887
+msgid "Mentioned in an update"
+msgstr ""
+
+#: welcome-pack-admin.php:888
+msgid "New friendship request"
+msgstr ""
+
+#: welcome-pack-admin.php:889
+msgid "New private message"
+msgstr ""
+
+#: welcome-pack-admin.php:890
+msgid "Promoted in a group"
+msgstr ""
+
+#: welcome-pack-admin.php:891
+msgid "Replied to a comment"
+msgstr ""
+
+#: welcome-pack-admin.php:892
+msgid "Replied to an update"
+msgstr ""
+
+#: welcome-pack-admin.php:897
+msgid "Template"
+msgstr ""
+
+#: welcome-pack-admin.php:898
+msgid "Email Template"
+msgstr ""
+
+#: templates/simplicity.php:27 templates/welcome_pack_default.php:57
+msgid "Email sent on %s"
+msgstr ""
+
+#: templates/simplicity.php:56 templates/welcome_pack_default.php:58
+msgid "For any support, please contact <a href=\"mailto:%1$s\">%1$s</a>"
+msgstr ""
+
+#: templates/welcome_pack_default.php:56
+msgid "Powered by BuddyPress"
+msgstr ""
+
+#: templates/welcome_pack_default.php:57
+msgid "Date"
+msgstr ""
+
+#: templates/welcome_pack_default.php:58
+msgid "Contact"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://buddypress.org/community/groups/welcome-pack/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Automatically send friend/group invites and a welcome message to new users, "
+"and redirect them to a custom page. Also provides email customisation "
+"options."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Paul Gibbs"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://byotos.com/"
+msgstr ""

@@ -1,0 +1,41 @@
+#fixme {
+/* IE 5.0/Win and other lesser browsers will use this */
+float:right;
+background:#000000;
+color:#ffffff;
+-moz-border-radius: 1em 0 0 0 ;
+border-radius: 1em 0 0 0;
+padding:5px;
+font-size:9px;text-align:center;
+margin-top:-25px;
+/* IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+
+  /* IE 5-7 */
+  filter: alpha(opacity=30);
+
+  /* Netscape */
+  -moz-opacity: 0.3;
+
+  /* Safari 1.x */
+  -khtml-opacity: 0.3;
+
+  /* Good browsers */
+  opacity: 0.3;
+
+}
+
+#fixme a {
+     color:#ffffff;
+font-size:9px;text-align:center;
+}
+
+/* popular */
+
+#popularmain { clear:both;width:100%;}
+.popularmainin { width:100%; border-bottom:1px dotted #ddd;margin-bottom:10px; padding:10px 10px 10px 0;}
+
+.popularmainin .thumb { float:left; margin:5px 15px 15px 0;}
+.popularmainin .thumb img { background:#ddd;padding:4px; }
+.popularmainin .excerpt {   }
+.popularmain .excerpt a { text-decoration:none; padding:0;margin:0; }

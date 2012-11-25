@@ -1,0 +1,109 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: fwvvw\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-02-12 05:08+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Myriam Faulkner <web@fairweb.fr>\n"
+"Language-Team: fairweb <web@fairweb.fr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-Basepath: E:\\wamp\\www\\wordpress-stable\\\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-SearchPath-0: wp-content\\plugins\\fw-vimeo-videowall\n"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-ajax-handler.php:11
+msgid "Close window"
+msgstr "Fermer la fenêtre"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:12
+msgid "Adds a Vimeo Videowall in your sidebar. The videowall may contain a user's, a group's, an album's or channel's Vimeo videos"
+msgstr "Ajoute un mur de vidéos Vimeo dans votre sidebar. Le mur de vidéos peut contenir des vidéos d'un utilisateur, d'un groupe, d'un album ou d'un canal."
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:18
+msgid "Vimeo Videowall"
+msgstr "Videowall Vimeo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:74
+msgid "Videos"
+msgstr "Vidéos"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:78
+msgid "Title"
+msgstr "Titre"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:83
+msgid "Vimeo source type"
+msgstr "Type de source Vimeo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:85
+msgid "Vimeo User"
+msgstr "Utilisateur Vimeo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:86
+msgid "Vimeo Group"
+msgstr "Groupe Vimeo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:87
+msgid "Vimeo Album"
+msgstr "Album Vimeo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:88
+msgid "Vimeo Channel"
+msgstr "Canal Vimeo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:93
+msgid "Vimeo ID"
+msgstr "ID Vimeo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:93
+msgid "user, group, album or channel ID"
+msgstr "ID de l'utilisateur, du groupe, de l'album ou du canal"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:98
+msgid "Display"
+msgstr "Afficher"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:100
+msgid "clickable video thumbnails"
+msgstr "des miniatures cliquables"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:101
+msgid "playable videos"
+msgstr "des vidéos jouables"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:102
+msgid "list of video titles"
+msgstr "Liste de titres"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:106
+msgid "Display video title under thumbnail (irrelevant if you display a list of video titles)"
+msgstr "Afficher le titre de la vidéo sous la miniature (sans effet si vous affichez une liste de titres)"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:107
+msgid "Yes"
+msgstr "Oui"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:109
+msgid "No"
+msgstr "Non"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:113
+msgid "Number of videos"
+msgstr "Nombre de vidéos"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:118
+msgid "Max video width"
+msgstr "Largeur max de la vidéo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall-widget.class.php:123
+msgid "Max video height"
+msgstr "Hauteur max de la vidéo"
+
+#: wp-content\plugins\fw-vimeo-videowall/fw-vimeo-videowall.class.php:85
+msgid "No video"
+msgstr "Aucune vidéo"
+
